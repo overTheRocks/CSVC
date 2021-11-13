@@ -44,3 +44,5 @@ tile_data = PoolIntArray( -327677, 0, 0, -327676, 0, 0, -327675, 0, 0, -327674, 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
 script = ExtResource( 3 )
+
+[node name="BulletHell" type="Node2D" parent="."]

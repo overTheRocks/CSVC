@@ -1,0 +1,16 @@
+{
+  "name": "nodejsserver",
+  "version": "1.0.0",
+  "description": "godothandoff",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "frog",
+  "license": "ISC",
+  "dependencies": {
+    "dgram": "^1.0.1",
+    "http": "0.0.1-security",
+    "net": "^1.0.2"
+  }
+}

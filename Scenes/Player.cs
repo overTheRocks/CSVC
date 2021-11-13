@@ -9,9 +9,11 @@ public class Player : KinematicBody2D
     private PackedScene Bullet;
     private Vector2 Velocity = Vector2.Zero; 
     private AudioStreamPlayer2D ShootSound;
-    private const float Speed = 69;
+    private const float Speed = 100; //nice
+    private Node2D BulletHell;
     public override void _Ready()
     {
+        BulletHell = (Node2D)GetNode("../BulletHell");
         PlayerSprite = (Sprite)GetNode("PlayerSprite");
         GunSprite = (Sprite)GetNode("GunSprite");
         GunParticles = (PackedScene)ResourceLoader.Load("res://Scenes/GunParticles.tscn");
@@ -32,6 +34,11 @@ public class Player : KinematicBody2D
             GunParticlesInstance.Position = (MousePos-Position).Normalized()*15f;
             GunParticlesInstance.Rotation = GunSprite.Rotation;
             AddChild(GunParticlesInstance); // Add particles as child
+
+            Node2D BulletInst = (Node2D)Bullet.Instance();
+            BulletInst.Call("SetDestination",(MousePos-Position).Normalized()*1000f);
+            BulletInst.Position = Position;
+            BulletHell.AddChild(BulletInst);
 
             GunSprite.Offset = new Vector2(GunSprite.Offset.x,0); // Sprite Kickback
             ShootSound.Play();
