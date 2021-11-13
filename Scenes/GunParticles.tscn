@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Scripts/GunParticles.gd" type="Script" id=1]
+
+[sub_resource type="Curve" id=2]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), -2.32005, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=3]
+curve = SubResource( 2 )
+
+[sub_resource type="ParticlesMaterial" id=4]
+flag_disable_z = true
+direction = Vector3( 0, 11.084, 0 )
+spread = 8.75
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 500.0
+initial_velocity_random = 0.5
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+angle = 360.0
+angle_random = 1.0
+scale = 12.18
+scale_random = 0.5
+scale_curve = SubResource( 3 )
+color = Color( 0.592157, 0.592157, 0.592157, 0.411765 )
+
+[node name="GunParticles" type="Particles2D"]
+emitting = false
+amount = 29
+lifetime = 0.3
+one_shot = true
+speed_scale = 3.5
+explosiveness = 0.85
+local_coords = false
+process_material = SubResource( 4 )
+script = ExtResource( 1 )
