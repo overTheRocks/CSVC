@@ -37,6 +37,18 @@ public class Server : Node2D
     public void UpdateDummy(int NetId, Vector2 PositionUpdate,float RotationUpdate, Vector2 PlayerVelo){
     
     }
+    [Remote]
+    public void DummyTrail(int NetId,Vector2 StartPos, Vector2 EndPos){
+        
+    }
+    [Remote]
+    public void ReceiveHit(int Damage,Vector2 Hitback){
+        
+    }
+    [Remote]
+    public void SetUserName(int NetId,string Username){
+        
+    }
 
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.
 //  public override void _Process(float delta)

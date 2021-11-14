@@ -8,25 +8,40 @@ public class Bullet : Node2D
     // private string b = "text";
     private RayCast2D Tracer;
     private Line2D Trail;
+    private bool Dummy;
+    private Camera2D Camera;
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        Tracer.ForceRaycastUpdate();
-        
-        if (Tracer.IsColliding()){
-            Trail.AddPoint(Tracer.GetCollisionPoint()-Position); // Draw To Colision Point
+        Camera = (Camera2D)GetNode("../../Camera2D");
+        Camera.Call("AddTrauma",0.3f);
+        if (Dummy){
+            Trail.AddPoint(Tracer.CastTo);
         } else {
-            Trail.AddPoint(Tracer.CastTo); // Draw to destination if doesnt hit 
+            Tracer.ForceRaycastUpdate();
+            if (Tracer.IsColliding()){
+                Node2D Collider = (Node2D)Tracer.GetCollider();
+                Collider = (Node2D)Collider.GetParent();
+                Trail.AddPoint(Tracer.GetCollisionPoint()-Position); // Draw To Colision Point
+                if (GetTree().NetworkPeer != null && Collider.IsInGroup("Damageable")){
+                    GD.Print(Collider.Name.ToInt());
+                    GetNode("/root/World").RpcId(Collider.Name.ToInt(),"ReceiveHit",10,Tracer.CastTo.Normalized()*400f);
+                }
+            } else {
+                Trail.AddPoint(Tracer.CastTo); // Draw to destination if doesnt hit 
+            }
+            if (GetTree().NetworkPeer != null){
+                GetNode("/root/World").Rpc("DummyTrail",GetTree().NetworkPeer.GetUniqueId(),Trail.Points[0],Trail.Points[1]);
+            }
         }
         
     }
-    public void SetDestination(Vector2 Destination){
+    public void SetDestination(Vector2 Destination,bool IsDummy){
         Tracer = (RayCast2D)GetNode("BulletTracer");
         Trail = (Line2D)GetNode("BulletTrail");
         Trail.AddPoint(Position);
         Tracer.CastTo = Destination;
-
-        
+        Dummy = IsDummy; // Dummy meaning networked visual only bullet
     }
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(float delta)

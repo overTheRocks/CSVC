@@ -25,6 +25,7 @@ scale_curve = SubResource( 3 )
 color = Color( 0.592157, 0.592157, 0.592157, 0.411765 )
 
 [node name="GunParticles" type="Particles2D"]
+z_index = -1
 emitting = false
 amount = 29
 lifetime = 0.3
