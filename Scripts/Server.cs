@@ -34,7 +34,8 @@ public class Server : Node2D
         GD.Print(NetId, " left.");
     }
     [Remote]
-    public void UpdateDummy(int NetId, Vector2 PositionUpdate,float RotationUpdate){
+    public void UpdateDummy(int NetId, Vector2 PositionUpdate,float RotationUpdate, Vector2 PlayerVelo){
+    
     }
 
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.

@@ -11,6 +11,7 @@ public class Player : KinematicBody2D
     private AudioStreamPlayer2D ShootSound;
     private const float Speed = 100; //nice
     private Node2D BulletHell;
+    public Vector2 MeasuredVelo = Vector2.Zero;
     public override void _Ready()
     {
         BulletHell = (Node2D)GetNode("../BulletHell");
@@ -77,8 +78,13 @@ public class Player : KinematicBody2D
                 Velocity.y -= Speed;
             }
         }
+        MeasuredVelo = Position;
+        MoveAndSlide(Velocity*Delta*60,Vector2.Up);
+        MeasuredVelo-=Position;
+        MeasuredVelo=-MeasuredVelo;
 
-        MoveAndSlide(Velocity*Delta*60,Vector2.Up); 
-
+    }
+    public Vector2 GetPlayerVelo(){
+        return MeasuredVelo;
     }
 }
