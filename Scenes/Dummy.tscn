@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Assets/Gun.png" type="Texture" id=1]
+[ext_resource path="res://Assets/PistolShoot.wav" type="AudioStream" id=2]
+[ext_resource path="res://Assets/Player.png" type="Texture" id=3]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 30.0167
+
+[node name="Dummy" type="Node2D"]
+
+[node name="PlayerSprite" type="Sprite" parent="."]
+modulate = Color( 1, 0, 0, 1 )
+scale = Vector2( 0.12, 0.12 )
+texture = ExtResource( 3 )
+
+[node name="GunSprite" type="Sprite" parent="."]
+modulate = Color( 0.419608, 0, 0, 1 )
+texture = ExtResource( 1 )
+offset = Vector2( 0, 10 )
+
+[node name="ShootSound" type="AudioStreamPlayer2D" parent="GunSprite"]
+stream = ExtResource( 2 )
+pitch_scale = 1.14
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+visible = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource( 1 )
