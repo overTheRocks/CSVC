@@ -15,9 +15,13 @@ public class Player : KinematicBody2D
     public float Accuracy = 0;
     private Node2D Cursor;
     private Random RNG = new Random();
+    private AnimationPlayer PlayerAnim;
+    private AudioStreamPlayer2D HitSound;
     public override void _Ready()
     {
         Cursor = (Node2D)GetNode("../Cursor");
+        HitSound = (AudioStreamPlayer2D)GetNode("HitSound");
+        PlayerAnim = (AnimationPlayer)GetNode("AnimationPlayer");
         BulletHell = (Node2D)GetNode("../BulletHell");
         PlayerSprite = (Sprite)GetNode("PlayerSprite");
         GunSprite = (Sprite)GetNode("GunSprite");
@@ -41,7 +45,7 @@ public class Player : KinematicBody2D
         
         GunSprite.Offset = GunSprite.Offset.LinearInterpolate(new Vector2(0,13),0.2f);  // Reset Gun kickback over time
         
-        if (Input.IsActionPressed("FireGun")){
+        if (Input.IsActionJustPressed("FireGun")){
             // Instance shooting particles:
             Accuracy += 15;
             Particles2D GunParticlesInstance = (Particles2D)GunParticles.Instance();
@@ -103,6 +107,8 @@ public class Player : KinematicBody2D
     }
     public void AddPlayerVelo(Vector2 VeloAdd){
         Velocity += VeloAdd;
+        HitSound.Play();
+        PlayerAnim.Play("Hit");
     }
     public static Vector2 RadianToVector2(float radian)
     {

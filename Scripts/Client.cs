@@ -32,7 +32,7 @@ public class Client : Node2D
     public override void _PhysicsProcess(float delta) //NON FPS TIED TICK FOR NET-TICK
     {
         HealthLabel.Text = Health.ToString() + " health."; 
-        if (GetTree().NetworkPeer != null && !Input.IsActionPressed("ui_home")){ // Only send RPC if connected to server
+        if (GetTree().NetworkPeer != null && !Input.IsActionJustPressed("ui_home")){ // Only send RPC if connected to server
             RpcUnreliable("UpdateDummy",MyId,SpecialDummy.Position,SpecialDummy.GetAngleTo(GetGlobalMousePosition()) - Mathf.Pi/2,SpecialDummy.Call("GetPlayerVelo"));
         } // arg[0] = the id, arg[1] is position, arg[2] is shooting angle, arg[3] is current velo for predictive movement
         //GD.Print(PredictiveFrameBuffer.Count);
