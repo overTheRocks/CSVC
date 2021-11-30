@@ -10,9 +10,12 @@ public class Bullet : Node2D
     private Line2D Trail;
     private bool Dummy;
     private Camera2D Camera;
+    private Sprite BulletHole;
+    private int Frames = 0;
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
+        BulletHole = (Sprite)GetNode("BulletHole");
         Camera = (Camera2D)GetNode("../../Camera2D");
         Camera.Call("AddTrauma",0.3f);
         if (Dummy){
@@ -24,16 +27,17 @@ public class Bullet : Node2D
                 Collider = (Node2D)Collider.GetParent();
                 Trail.AddPoint(Tracer.GetCollisionPoint()-Position); // Draw To Colision Point
                 if (GetTree().NetworkPeer != null && Collider.IsInGroup("Damageable")){
-                    GD.Print(Collider.Name.ToInt());
-                    GetNode("/root/World").RpcId(Collider.Name.ToInt(),"ReceiveHit",10,Tracer.CastTo.Normalized()*400f);
+                    //GD.Print(Collider.Name.ToInt());
+                    GetNode("/root/World").RpcId(Collider.Name.ToInt(),"ReceiveHit",4,Tracer.CastTo.Normalized()*400f);
                 }
             } else {
                 Trail.AddPoint(Tracer.CastTo); // Draw to destination if doesnt hit 
             }
             if (GetTree().NetworkPeer != null){
-                GetNode("/root/World").Rpc("DummyTrail",GetTree().NetworkPeer.GetUniqueId(),Trail.Points[0],Trail.Points[1]);
+                GetNode("/root/World").Rpc("DummyTrail",Trail.Points[0],Trail.Points[1]);
             }
         }
+        BulletHole.Position = Trail.Points[1];
         
     }
     public void SetDestination(Vector2 Destination,bool IsDummy){
@@ -46,8 +50,13 @@ public class Bullet : Node2D
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(float delta)
     {
+
         Trail.Modulate = new Color (Trail.Modulate.r,Trail.Modulate.g,Trail.Modulate.b,Trail.Modulate.a-0.175f); // Fade Trail
-        if (Trail.Modulate.a <= 0){
+        Frames++;
+        if (Frames > 300){
+        BulletHole.Modulate = new Color (BulletHole.Modulate.r,BulletHole.Modulate.g,BulletHole.Modulate.b,BulletHole.Modulate.a-0.025f); // Fade BulletHole
+        }
+        if (BulletHole.Modulate.a <= 0){
             QueueFree(); // Remove bullet if trail has faded fully
         }
     }

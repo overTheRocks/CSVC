@@ -29,7 +29,7 @@ public class Dummy : Node2D
     public void DummyShoot(Vector2 StartPos, Vector2 EndPos){
         GunSprite.Offset = new Vector2(GunSprite.Offset.x,0);
         ShootSound.Play();
-        Particles2D GunParticlesInstance = (Particles2D)GunParticles.Instance();
+        CPUParticles2D GunParticlesInstance = (CPUParticles2D)GunParticles.Instance();
         GunParticlesInstance.Position = EndPos.Normalized()*15f;
         GunParticlesInstance.Rotation = GetAngleTo(EndPos+Position) - Mathf.Pi/2;
         AddChild(GunParticlesInstance); // Add particles as child

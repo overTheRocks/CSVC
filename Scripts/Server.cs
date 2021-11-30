@@ -7,25 +7,35 @@ public class Server : Node2D
     // private int a = 2;
     // private string b = "text";
     private int MyId;
-    NetworkedMultiplayerENet Peer = new NetworkedMultiplayerENet();
+    //WebSocketServer Peer;
     private Label Label;
+    WebSocketServer WSServer;
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
         Label = (Label)GetNode("Label");
-
+        GetTree().NetworkPeer = null;
         var Tree = GetTree();
+
+        WSServer = new WebSocketServer();
         Tree.Connect("network_peer_connected", this, nameof(_OnPeerConnected));
         Tree.Connect("network_peer_disconnected", this, nameof(_OnPeerDisconnected));
-        Peer = new NetworkedMultiplayerENet();
-        GetTree().NetworkPeer = null;
+        //Tree.Connect("connection_error", this, nameof(_OnPeerDisconnected));
 
-        Peer.CreateServer(25567,10);
-        GetTree().NetworkPeer = Peer;
+        //
+        string[] EmptyArgs = new string[0];
+        GD.Print(WSServer.Listen(2457,EmptyArgs,true));
 
-        MyId = Tree.NetworkPeer.GetUniqueId();
-        GD.Print(MyId + "-netid");
+        GetTree().NetworkPeer = WSServer;
+
+        //MyId = Tree.NetworkPeer.GetUniqueId();
+        //GD.Print(MyId + "-netid");
     }
+    public override void _Process(float delta){
+        if (WSServer.IsListening()){
+            WSServer.Poll();
+        }
+    } 
     public void _OnPeerConnected(int NetId){
         GD.Print(NetId, " joined.");
         Label.Text = NetId.ToString();
@@ -34,11 +44,11 @@ public class Server : Node2D
         GD.Print(NetId, " left.");
     }
     [Remote]
-    public void UpdateDummy(int NetId, Vector2 PositionUpdate,float RotationUpdate, Vector2 PlayerVelo){
+    public void UpdateDummy(Vector2 PositionUpdate,float RotationUpdate, Vector2 PlayerVelo){
     
     }
     [Remote]
-    public void DummyTrail(int NetId,Vector2 StartPos, Vector2 EndPos){
+    public void DummyTrail(Vector2 StartPos, Vector2 EndPos){
         
     }
     [Remote]
@@ -46,7 +56,7 @@ public class Server : Node2D
         
     }
     [Remote]
-    public void SetUserName(int NetId,string Username){
+    public void SetUserName(string Username){
         
     }
 
